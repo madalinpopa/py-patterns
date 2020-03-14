@@ -10,8 +10,9 @@ from sqlalchemy import create_engine
 
 DEFAULT_SESSION = sessionmaker(bind=create_engine("sqlite:///uow.db"))
 
+
 class AbstractUnitOfWork(abc.ABC):
-    
+
     repo = AbstractRepository
 
     def __exit__(self, *args):
@@ -27,7 +28,6 @@ class AbstractUnitOfWork(abc.ABC):
 
 
 class SqlAlchemyUnitOfWork(AbstractRepository):
-
     def __init__(self, session_factory=DEFAULT_SESSION):
         self.session_factory = session_factory
 
