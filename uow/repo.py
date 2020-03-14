@@ -28,5 +28,5 @@ class SqlRepository(AbstractRepository):
     def get(self, reference: str) -> Order:
         return self._session.query(Order).filter_by(reference=reference).first()
 
-    def get_all_order(self) -> List[Order]:
+    def get_all_orders(self) -> List[Order]:
         return self._session.query(Order).all()

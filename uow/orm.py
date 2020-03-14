@@ -4,14 +4,14 @@
 
 import datetime
 
-from sqlalchemy import (Column, Date, ForeignKey, Integer, MetaData, String,
-                        Table)
+from sqlalchemy import Column, Date, ForeignKey, Integer, MetaData, String, Table
 from sqlalchemy.orm import mapper, relationship
 
 from model import Line, Order
 
 metadata = MetaData()
 
+# child
 line = Table(
     "line",
     metadata,
@@ -21,6 +21,7 @@ line = Table(
     Column("qty", Integer, nullable=False),
 )
 
+# parent
 order = Table(
     "order",
     metadata,
@@ -32,7 +33,5 @@ order = Table(
 
 
 def start_mapper():
-    mapper(Order, order, properties={"lines": relationship(Line, backref="line.id")})
-    mapper(
-        Line, line, properties={"lines": relationship(Order, back_populates="lines")}
-    )
+    mapper(Order, order, properties={"lines": relationship(Line, back_populates="order")})
+    mapper(Line, line, properties={"order": relationship(Order, back_populates="lines")})
