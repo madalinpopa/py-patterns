@@ -10,6 +10,8 @@ from orm import metadata, start_mapper
 
 from repo import SqlRepository
 
+from unit_of_work import SqlAlchemyUnitOfWork
+
 
 # define engine
 engine = create_engine("sqlite:///uow.db")
@@ -25,22 +27,21 @@ def main():
     # create all the tables
     metadata.create_all(bind=engine)
 
-    # initiate repository
-    repo = SqlRepository(session)
-
     order = Order("ORD-1", "John Doe")
     line1 = Line(order, "Product-1", 10)
     line2 = Line(order, "Product-2", 20)
     line3 = Line(order, "Product-3", 12)
 
-    # add order
-    repo.add(order)
-
     # save
-    session.commit()
+    uow = SqlAlchemyUnitOfWork()
 
-    order = repo.get("ORD-1")
-    print(order.lines)
+    with uow:
+        uow.repo.add(order)
+        uow.commit()
+
+    with uow:
+        order = uow.repo.get("ORD-1")
+        print(order.lines)
 
 
 if __name__ == "__main__":

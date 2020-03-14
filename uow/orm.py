@@ -33,5 +33,9 @@ order = Table(
 
 
 def start_mapper():
-    mapper(Order, order, properties={"lines": relationship(Line, back_populates="order")})
-    mapper(Line, line, properties={"order": relationship(Order, back_populates="lines")})
+    mapper(
+        Order, order, properties={"lines": relationship(Line, back_populates="order")}
+    )
+    mapper(
+        Line, line, properties={"order": relationship(Order, back_populates="lines")}
+    )

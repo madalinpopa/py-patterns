@@ -4,6 +4,7 @@
 
 import datetime
 from dataclasses import dataclass
+from typing import List
 
 
 @dataclass
@@ -21,4 +22,4 @@ class Order:
         self.lines = []
 
     def __repr__(self):
-        return f"<Order:{self.customer}>"
+        return f"<Order:{self.reference}>"
