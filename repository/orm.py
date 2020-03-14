@@ -1,10 +1,11 @@
 # coding: utf-8
 
 # repository/orm
-from sqlalchemy import MetaData, Table, ForeignKey, Column, String, Integer
+
+from sqlalchemy import Column, ForeignKey, Integer, MetaData, String, Table
 from sqlalchemy.orm import mapper, relationship
 
-from .model import User, Profile
+from .model import Profile, User
 
 metadata = MetaData()
 
@@ -28,5 +29,9 @@ user = Table(
 
 
 def start_mapper():
-    mapper(Profile, profile, properties={"user": relationship(User, uselist=False, backref="user")})
+    mapper(
+        Profile,
+        profile,
+        properties={"user": relationship(User, uselist=False, backref="user")},
+    )
     mapper(User, user, properties={"profile": relationship(Profile, backref="profile")})
