@@ -2,25 +2,25 @@
 
 # uow/model.py
 
+import datetime
 from dataclasses import dataclass
 
-import datetime
 
 @dataclass
 class Line:
-    order_id: str
+    order_id: int
     sku: str
     qty: str
 
 
 class Order:
-
-    def __init__(self, customer: str, date: datetime.datetime, lines: Line=None):
+    def __init__(
+        self, reference: str, customer: str, date: datetime.datetime, lines: Line = None
+    ):
+        self.reference = reference
         self.customer = customer
         self.date = date
         self.lines = lines
 
-
     def __repr__(self):
         return f"<Order:{self.customer}>"
-

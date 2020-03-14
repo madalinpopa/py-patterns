@@ -32,4 +32,3 @@ class SqlRepository(AbstractRepository):
 
     def get_all_users(self) -> List[User]:
         return self._session.query(User).all()
-

@@ -2,12 +2,13 @@
 
 # uow/model.py
 
-from sqlalchemy import MetaData, Table, ForeignKey, Column, Integer, String, Date
+import datetime
+
+from sqlalchemy import (Column, Date, ForeignKey, Integer, MetaData, String,
+                        Table)
 from sqlalchemy.orm import mapper, relationship
 
 from model import Line, Order
-
-import datetime
 
 metadata = MetaData()
 
@@ -22,8 +23,9 @@ line = Table(
 
 order = Table(
     "order",
-    Order,
+    metadata,
     Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("reference", String(15), nullable=False, unique=True),
     Column("customer", String(50), nullable=True),
     Column("date", Date, default=datetime.datetime.now()),
 )
@@ -32,6 +34,5 @@ order = Table(
 def start_mapper():
     mapper(Order, order, properties={"lines": relationship(Line, backref="line.id")})
     mapper(
-        line, Line, properties={"lines": relationship(Order, back_populates="lines")}
+        Line, line, properties={"lines": relationship(Order, back_populates="lines")}
     )
-
