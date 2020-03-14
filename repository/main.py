@@ -7,6 +7,7 @@ from sqlalchemy.orm import sessionmaker
 
 from model import Profile, User
 from orm import metadata, start_mapper
+from repo import AbstractRepository, ProfileRepository, UserRepository
 
 # define engine
 engine = create_engine("sqlite:///repo.db", echo=True)
@@ -25,18 +26,18 @@ def main():
     user = User("ed", "secret")
     profile = Profile("John", "Doe", "john.doe@gmail.com")
 
-    session.add(user)
-    session.add(profile)
-    session.commit()
+    user_repo = UserRepository(session)
+    user_repo.add(user)
 
-    user = session.query(User).filter_by(username="ed").first()
-    profile = session.query(Profile).filter_by(firstname="John").first()
+    profile_repo = ProfileRepository(session)
+    profile_repo.add(profile)
 
     user.profile = profile
-    session.commit
 
-    print("user.profile", user.profile)
-    print("profile.user", profile.user)
+    user = user_repo.get("ed")
+    profile = profile_repo.get(user.id)
+
+    print(user, profile)
 
 
 if __name__ == "__main__":
