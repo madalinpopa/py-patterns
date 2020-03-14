@@ -19,7 +19,7 @@ class Order:
         self.reference = reference
         self.customer = customer
         self.date = date
-        self.lines = []
+        self.lines: List[Line]
 
     def __repr__(self):
         return f"<Order:{self.reference}>"
