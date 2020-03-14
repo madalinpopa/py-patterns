@@ -5,7 +5,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, MetaData, String, Table
 from sqlalchemy.orm import mapper, relationship
 
-from .model import Profile, User
+from model import Profile, User
 
 metadata = MetaData()
 
@@ -15,7 +15,7 @@ profile = Table(
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("firstname", String(50), nullable=False),
     Column("lastname", String(50), nullable=False),
-    Column("email", String("50"), nullable=False),
+    Column("email", String(50), nullable=False),
     Column("user_id", Integer, ForeignKey("user.id")),
 )
 
@@ -32,6 +32,12 @@ def start_mapper():
     mapper(
         Profile,
         profile,
-        properties={"user": relationship(User, uselist=False, backref="user")},
+        properties={"user": relationship(User, back_populates="profile")},
     )
-    mapper(User, user, properties={"profile": relationship(Profile, backref="profile")})
+    mapper(
+        User,
+        user,
+        properties={
+            "profile": relationship(Profile, uselist=False, back_populates="user")
+        },
+    )
