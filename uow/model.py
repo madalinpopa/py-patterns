@@ -15,9 +15,11 @@ class Line:
 
 class Order:
 
-    def __init__(self, customer: str, date: datetime.datetime):
+    def __init__(self, customer: str, date: datetime.datetime, lines: Line=None):
         self.customer = customer
         self.date = date
+        self.lines = lines
+
 
     def __repr__(self):
         return f"<Order:{self.customer}>"
