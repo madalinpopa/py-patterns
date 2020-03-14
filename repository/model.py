@@ -10,7 +10,7 @@ class Profile:
     firstname: str
     lastname: str
     email: str
-    user: User
+    user: int
 
 
 class User:
