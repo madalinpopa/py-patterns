@@ -28,5 +28,5 @@ user = Table(
 
 
 def start_mapper():
-    mapper(Profile, profile, properties={"user": relationship(User, backref="user")})
+    mapper(Profile, profile, properties={"user": relationship(User, uselist=False, backref="user")})
     mapper(User, user, properties={"profile": relationship(Profile, backref="profile")})
