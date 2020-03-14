@@ -119,3 +119,4 @@ sabd.sublime-project
 sabd.sublime-workspace
 
 .idea
+*.db
