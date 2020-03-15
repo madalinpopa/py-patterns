@@ -27,4 +27,4 @@ class SqlRepository(AbstractRepository):
         self._session.add(blog)
 
     def get(self, name: str) -> Blog:
-        self._session.query(Blog).filter_by(name=name).first()
+        return self._session.query(Blog).filter_by(name=name).first()

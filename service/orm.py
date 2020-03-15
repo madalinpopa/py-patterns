@@ -46,9 +46,7 @@ tag_post = Table(
 
 def start_mapper():
     mapper(
-        Blog,
-        blog,
-        properties={"posts": relationship(Post, uselist=False, back_populates="blog")},
+        Blog, blog, properties={"posts": relationship(Post, back_populates="blog")},
     )
     tag_mapp = mapper(
         Tag,
@@ -61,7 +59,7 @@ def start_mapper():
         Post,
         post,
         properties={
-            "blog": relationship(Blog, back_populates="posts"),
+            "blog": relationship(Blog, uselist=False, back_populates="posts"),
             "tags": relationship(tag_mapp, secondary=tag_post, back_populates="posts"),
         },
     )
