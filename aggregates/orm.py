@@ -37,4 +37,3 @@ def start_mapper():
         profile,
         properties={"user": relationship(User, back_populates="profile")},
     )
-
