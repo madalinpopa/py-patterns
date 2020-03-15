@@ -11,7 +11,7 @@ from orm import metadata, start_mapper
 from repo import SqlRepository
 from unit_of_work import SqlAlchemyUnitOfWork
 
-from service import create_post # type: ignore
+from service import create_post  # type: ignore
 
 
 # define engine

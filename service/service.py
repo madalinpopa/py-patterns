@@ -24,6 +24,3 @@ def create_post(
         tag_list = [model.Tag(t) for t in tags]
 
         post.tags.extend(tag_list)
-
-        # save post to blog
-        uow.commit()

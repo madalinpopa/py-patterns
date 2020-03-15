@@ -37,7 +37,6 @@ def main():
 
     with uow:
         uow.repo.add(order)
-        uow.commit()
 
     with uow:
         order = uow.repo.get("ORD-1")
