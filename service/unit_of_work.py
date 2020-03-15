@@ -1,15 +1,16 @@
 # coding: utf-8
 
-# uow/unit_of_work.py
+# service/unit_of_work.py
 
 import abc
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from repo import AbstractRepository, SqlRepository
+from repo import AbstractRepository
+from repo import SqlRepository
 
-DEFAULT_SESSION = sessionmaker(bind=create_engine("sqlite:///uow.db"))
+DEFAULT_SESSION = sessionmaker(bind=create_engine("sqlite:///service.db"))
 
 
 class AbstractUnitOfWork(abc.ABC):
