@@ -2,6 +2,10 @@
 
 # aggregates/model.py
 
+import binascii
+import hashlib
+import os
+from typing import List
 
 class User:
     def __init__(self, username: str, password: str):
