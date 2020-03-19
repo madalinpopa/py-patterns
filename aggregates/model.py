@@ -3,18 +3,6 @@
 # aggregates/model.py
 
 
-class Authentication:
-
-    def __init__(self, password: str)
-        self._user = User
-
-    def hash_user_pass(self):
-        pass
-
-    def verify_user_pass(self):
-        pass
-
-
 class User:
     def __init__(self, username: str, password: str):
         self.username = username
@@ -34,3 +22,25 @@ class Profile:
 
     def __repr__(self):
         return f"<Profile: {self.firstname} {self.lastname}>"
+
+
+class UserAggregate:
+    def __init__(self, username: str, password: str):
+        self._username = username
+        self._password = self._hash_password(password)
+        self.user = User(self.username, self._password)
+
+    @property
+    def username(self):
+        return self._username
+
+    @username.setter
+    def username(self, uname):
+        self._username = uname
+
+    @property
+    def password(self)
+
+    def _hash_password(self, password):
+        return f"hash +{password}" 
+
