@@ -29,22 +29,6 @@ class Profile:
 
 
 class UserAggregate:
-    def __init__(self, username: str, password: str):
-        self._username = username
-        self._password = self._hash_password(password)
-        self.user = User(self.username, self._password)
-
-    @property
-    def username(self):
-        return self._username
-
-    @username.setter
-    def username(self, uname):
-        self._username = uname
-
-    @property
-    def password(self)
-
-    def _hash_password(self, password):
-        return f"hash +{password}" 
-
+    def __init__(self, username: str, version_number: int = 0):
+        self._username = User()
+        self.version_number = version_number
