@@ -3,8 +3,9 @@
 
 # examples/customer_entity.py
 
-from entity import Entity
 import uuid
+
+from entity import Entity
 
 
 class Customer(Entity):
@@ -14,7 +15,7 @@ class Customer(Entity):
         self._name = name
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(discarded={self._discarded}name={self_name}, id={self.id})"
+        return f"{self.__class__.__name__}(discarded={self._discarded}name={self._name}, id={self.id})"
 
     @property
     def name(self):

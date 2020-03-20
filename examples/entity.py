@@ -4,6 +4,7 @@
 # examples/entity.py
 
 import uuid
+import abc
 
 # Example of enitity
 
@@ -40,7 +41,7 @@ class Entity(abc.ABC):
         self._id = entity_id
         self._version = entity_version
         self._discarded = False
-        self._instalce_id = uuid.uuid1()
+        self._instance_id = uuid.uuid1()
 
     def _increment_version(self):
         self._version += 1
@@ -48,7 +49,7 @@ class Entity(abc.ABC):
     @property
     def instance_id(self):
         """ A value unique among instances of this entity """
-        return self._instalce_id
+        return self._instance_id
 
     @property
     def id(self):
