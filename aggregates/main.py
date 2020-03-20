@@ -18,7 +18,7 @@ def main():
     start_mapper()
 
     # create all the tables
-    
+
     metadata.create_all(bind=engine)
 
 

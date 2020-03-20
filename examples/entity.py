@@ -11,6 +11,7 @@ import uuid
 class Event:
     pass
 
+
 class DomainEvent:
     pass
 
@@ -25,6 +26,7 @@ class Entity(abc.ABC):
         version: An integer version
         discarded: True if this entity should or not longer be used.
     """
+
     _instance_id_generator = uuid.uuid1()
 
     class CreatedData(DomainEvent):
@@ -72,5 +74,6 @@ class Entity(abc.ABC):
 
 class DiscardedEntityError(Exception):
     """ Raised when an attempt is made to use a discarded Entity. """
-    pass
 
+    pass
+ 

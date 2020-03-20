@@ -10,8 +10,6 @@ from dataclasses import dataclass
 import abc
 
 
-
-
 class Role:  # value set
     name: str
     user: int
@@ -26,10 +24,5 @@ class User:
 
 class UserAggregate:
     def __init__(self, username: str, version_number: int = 0):
-        self.username = username,
+        self.username = (username,)
         self.version_number = version_number
-
-
-
-
-
