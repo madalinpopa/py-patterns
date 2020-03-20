@@ -76,4 +76,3 @@ class DiscardedEntityError(Exception):
     """ Raised when an attempt is made to use a discarded Entity. """
 
     pass
- 
