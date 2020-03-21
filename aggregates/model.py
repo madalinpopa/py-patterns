@@ -146,7 +146,9 @@ class Role:
 class Proile(Entity):
     """ Profile Aggregate Entity. """
 
-    def __init__(self, profile_id: str, profile_version: int = 0, firstname=None, lastname=None):
+    def __init__(
+        self, profile_id: str, profile_version: int = 0, firstname=None, lastname=None
+    ):
         super().__init__(profile_id, profile_version)
         self._firstname = firstname
         self._lastname = lastname
@@ -184,7 +186,7 @@ class Proile(Entity):
         self._check_not_discarded()
         return self._user
 
-    @user.setter()
+    @user.setter
     def user(self, value):
         self._check_not_discarded()
         if not isinstance(value, User):
@@ -214,7 +216,9 @@ class Proile(Entity):
 class User(Entity):
     """ User Root Aggregate. """
 
-    def __init__(self, user_id: str, user_version: int = 0, username=None, password=None):
+    def __init__(
+        self, user_id: str, user_version: int = 0, username=None, password=None
+    ):
         super().__init__(user_id, user_version)
         self._username: username
         self._password: password
@@ -255,7 +259,7 @@ class User(Entity):
     @profile.setter
     def profile(self, value):
         self._check_not_discarded()
-        if no isinstance(value, Profile):
+        if not isinstance(value, Profile):
             raise ValueError(f"{value} is not instance of {Profile}")
         self._profile = value
         self._increment_version()
