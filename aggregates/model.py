@@ -8,7 +8,10 @@ import hashlib
 import os
 import uuid
 from dataclasses import dataclass
-from typing import List, Any, NewType
+from typing import Any, List, NewType
+
+from sqlalchemy.ext.hybrid import hybrid_property
+import uuid
 
 # Custom Types
 
@@ -30,27 +33,27 @@ class Entity(abc.ABC):
     """ Base entity class for all entities. """
 
     @abc.abstractmethod
-    def __init__(id: str, version: int = 0):
-        self._id = id
+    def __init__(self, uuid_id: str, version: int = 0):
+        self._uuid = uuid_id
         self._version = version
         self._discarded = False
-        self._instance_id = uuid.uuid5()
+        self._instance_id = uuid.uuid4().hex
 
-    @property
-    def id() -> str:
+    @hybrid_property
+    def uuid() -> str:
         self._check_not_discarded()
-        return self._id
+        return self._uuid
 
-    @property
+    @hybrid_property
     def version(self) -> int:
         self._check_not_discarded
         return self._version
 
-    @property
+    @hybrid_property
     def discarded(self) -> bool:
         return self._discarded
 
-    @property
+    @hybrid_property
     def instance_id(self) -> str:
         return self._instance_id
 
@@ -73,49 +76,61 @@ class Email:
         if "@" not in address:
             raise ValueError("Email address must contain '@'")
         local_part, _, domain_part = address.partition("@")
-        self._parts = (local_part, domain_part)
+        self._local_part = local_part
+        self._domain_part = domain_part
 
-    def __init__(self, local_part: str, domain_part: str):
+    def __init__(self, local_part: str, domain_part: str, profile: "Profile"):
         if len(local_part) + len(domain_part) > 255:
             raise ValueError("Email address too long")
-        self._parts = (local_part, domain_part)
+        self._local_part = local_part
+        self._domain_part = domain_part
+        self._profile = profile
 
     def __str__(self):
-        return "@".join(self._parts)
+        return "@".join(self._domain_part)
 
     def __repr__(self):
-        return f"Email(local_part={self._parts[0]}, domain_part={self._parts[1]})"
+        return f"Email(local_part={self._local_part}, domain_part={self._domain_part})"
 
     def __eq__(self, email_obj: Any):
         if not isinstance(email_obj, Email):
             return NotImplemented
-        return self._parts == email_obj._parts
+        return self._local_part == email_obj._local_part
 
     def __ne__(self, email_obj: Any):
         return not (self == email_obj)
 
     def __hash__(self):
-        return hash(self._parts)
+        return hash(self._local_part + self._domain_part)
 
-    @property
+    @hybrid_property
+    def profile(self):
+        return self._profile
+
+    @hybrid_property
     def local(self):
-        return self._parts[0]
+        return self._local_part
 
-    @property
+    @hybrid_property
     def domain(self):
-        return self._parts[1]
+        return self._domain_part
 
-    def replace(self, local=None, domain=None):
+    def replace(self, local=None, domain=None, profile=None):
+        if not isinstance(profile, Proile):
+            raise ValueError(f"{profile} is not instance of {Profile}")
         return Email(
-            local_part=local or self._parts[0], domain_part=domain or self._parts[1]
+            local_part=local or self._local_part,
+            domain_part=domain or self._domain_part,
+            profile=profile or self._profile,
         )
 
 
 class Role:
     """ Role value object. """
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, user: "User"):
         self._name = name
+        self._user = user
 
     def __str__(self):
         return f"name={self._name}"
@@ -134,16 +149,21 @@ class Role:
     def __hash__(self):
         return hash(self._name)
 
-    @property
+    @hybrid_property
     def name(self) -> str:
         return self._name
 
-    @name.setter
-    def name(self, new_name) -> "Role":
-        return Role(name=new_name)
+    @hybrid_property
+    def user(self):
+        return self._user
+
+    def replace(self, name=None, user=None):
+        if not isinstance(user, User):
+            raise ValueError(f"{user} is not instance of {User}")
+        return Role(name=name or self._name, user=user or self._user)
 
 
-class Proile(Entity):
+class Profile(Entity):
     """ Profile Aggregate Entity. """
 
     def __init__(
@@ -152,10 +172,13 @@ class Proile(Entity):
         super().__init__(profile_id, profile_version)
         self._firstname = firstname
         self._lastname = lastname
-        self._user: int
+        self._user_profile: int
         self._email: int
 
-    @property
+    def __repr__(self):
+        return f"Profile(id={self.uuid}, version={self.version}, firstname={self._firstname}, lastname={self._lastname})"
+
+    @hybrid_property
     def firstname(self):
         self._check_not_discarded()
         return self._firstname
@@ -168,7 +191,7 @@ class Proile(Entity):
         self._firstname = value
         self._increment_version()
 
-    @property
+    @hybrid_property
     def lastname(self):
         self._check_not_discarded()
         return self._lastname
@@ -181,20 +204,20 @@ class Proile(Entity):
         self._lastname = value
         self._increment_version()
 
-    @property
-    def user(self):
+    @hybrid_property
+    def user_profile(self):
         self._check_not_discarded()
-        return self._user
+        return self._user_profile
 
-    @user.setter
-    def user(self, value):
+    @user_profile.setter
+    def user_profile(self, value):
         self._check_not_discarded()
         if not isinstance(value, User):
             raise ValueError(f"{value} is not instance of {User}")
         self._increment_version()
-        self._user = value
+        self._user_profile = value
 
-    @property
+    @hybrid_property
     def email(self):
         self._check_not_discarded()
         return self._email
@@ -208,9 +231,10 @@ class Proile(Entity):
         self._increment_version()
 
     def register_profile(self, firstname: str, lastname: str):
-        profile = Proile(
+        profile = Profile(
             profile_id=uuid.uuid4().hex, firstname=firstname, lastname=lastname
         )
+        return profile
 
 
 class User(Entity):
@@ -220,12 +244,12 @@ class User(Entity):
         self, user_id: str, user_version: int = 0, username=None, password=None
     ):
         super().__init__(user_id, user_version)
-        self._username: username
-        self._password: password
+        self._username = username
+        self._password = password
         self._profile: int
         self._role: int
 
-    @property
+    @hybrid_property
     def username(self):
         self._check_not_discarded()
         return self._username
@@ -238,7 +262,7 @@ class User(Entity):
         self._username = value
         self._increment_version()
 
-    @property
+    @hybrid_property
     def password(self):
         self._check_not_discarded()
         return self._password
@@ -251,7 +275,7 @@ class User(Entity):
         self._password = value
         self._increment_version
 
-    @property
+    @hybrid_property
     def profile(self):
         self._check_not_discarded()
         return self._profile
@@ -264,7 +288,7 @@ class User(Entity):
         self._profile = value
         self._increment_version()
 
-    @property
+    @hybrid_property
     def role(self):
         self._check_not_discarded()
         return self._role
