@@ -30,6 +30,7 @@ class Customer(Entity):
         self._name = value
         self._increment_version()
 
-    def register_customer(name):
-        customer = Customer(customer_id=uuid.uuid4().hex, customer_version=0, name=name)
-        return customer
+
+def register_customer(name):
+    customer = Customer(customer_id=uuid.uuid4().hex, customer_version=0, name=name)
+    return customer
