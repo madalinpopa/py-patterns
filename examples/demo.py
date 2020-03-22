@@ -22,25 +22,32 @@ session = sessionmaker(bind=engine)()
 
 
 class User:
-    def __init__(self, username, version=None):
+    def __init__(self, username: str):
         self._username = username
-        self._version_uuid = version
+        self._version: str
 
-    # @hybrid_property
-    # def username(self):
-    #     return self._username
+    @hybrid_property
+    def version(self):
+        return self._version
 
-    # @username.setter
-    # def username(self, value):
-    #     self._username = value
+    @hybrid_property
+    def username(self):
+        return self._username
+
+    @username.setter
+    def username(self, value):
+        self._username = value
+
+    def __repr__(self):
+        return f"{self._username}"
 
 
 user = Table(
     "user",
     metadata,
     Column("id", Integer, primary_key=True, autoincrement=True),
-    Column("_username", String(30), nullable=False),
-    Column("_version_id", String(32), nullable=False),
+    Column("username", String(30), nullable=False),
+    Column("version", String(32)),
 )
 
 
@@ -48,9 +55,13 @@ def start_mapper():
     mapper(
         User,
         user,
-        order_by="user._username",
-        version_id_col="_version_id",
+        order_by=user.c.username,
+        version_id_col=user.c.version,
         version_id_generator=lambda version: uuid.uuid4().hex,
+        properties={
+            "_username": user.c.username,
+            "_version": user.c.version
+            },
     )
 
 
@@ -60,7 +71,7 @@ def main():
 
     metadata.create_all(bind=engine)
 
-    user = User("madalin")
+    user = User("abmadalin")
     session.add(user)
     session.commit()
 
