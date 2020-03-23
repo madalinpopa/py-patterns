@@ -3,13 +3,19 @@
 # examples/demo.py
 
 
-from sqlalchemy import MetaData, Table, Column, String, Integer, ForeignKey
-from sqlalchemy.orm import mapper, relationship
-
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
-from sqlalchemy.ext.hybrid import hybrid_property
 import uuid
+
+from sqlalchemy import (
+    Column,
+    ForeignKey,
+    Integer,
+    MetaData,
+    String,
+    Table,
+    create_engine,
+)
+from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.orm import mapper, relationship, sessionmaker
 
 # metadata
 metadata = MetaData()

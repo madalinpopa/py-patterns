@@ -1,14 +1,12 @@
 # coding: utf-8
 
+import uuid
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-
-from orm import start_mapper, metadata
-import uuid
-
-from model import Email, Role, User, Profile, register_user, register_user_profile
-
+from model import Email, Profile, Role, User, register_user, register_user_profile
+from orm import metadata, start_mapper
 from unit_of_work import SqlAlchemyUnitOfWork
 
 # define engine
@@ -36,8 +34,8 @@ def main():
     #     uow.repo.add(user)
 
     with uow:
-        user = uow.repo.get("e0fbd31932a54ed393c4fadef1a6e391")
-        print(user)
+        user = uow.repo.get("d0925fdeb72849c38c55260e08b2d59d")
+        print(user.profile)
 
 
 if __name__ == "__main__":

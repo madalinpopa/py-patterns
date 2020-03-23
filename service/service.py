@@ -2,9 +2,10 @@
 
 # service/service.py
 
-from unit_of_work import AbstractUnitOfWork
-import model
 from typing import List
+
+import model
+from unit_of_work import AbstractUnitOfWork
 
 
 def create_post(

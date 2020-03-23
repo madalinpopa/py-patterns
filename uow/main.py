@@ -7,11 +7,8 @@ from sqlalchemy.orm import sessionmaker
 
 from model import Line, Order
 from orm import metadata, start_mapper
-
 from repo import SqlRepository
-
 from unit_of_work import SqlAlchemyUnitOfWork
-
 
 # define engine
 engine = create_engine("sqlite:///uow.db")

@@ -2,13 +2,12 @@
 
 # aggregates/orm.py
 
-from sqlalchemy import MetaData, Table, Column, String, Integer, ForeignKey, Boolean
-from sqlalchemy.orm import mapper, relationship
-
-from model import Email, User, Profile, Role
-
 import uuid
 
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, MetaData, String, Table
+from sqlalchemy.orm import mapper, relationship
+
+from model import Email, Profile, Role, User
 
 metadata = MetaData()
 

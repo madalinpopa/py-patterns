@@ -3,8 +3,7 @@
 # aggregates/repo.py
 
 import abc
-
-from typing import List, Any
+from typing import Any, List
 
 from model import Profile, User
 

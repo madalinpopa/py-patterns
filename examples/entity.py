@@ -3,8 +3,8 @@
 
 # examples/entity.py
 
-import uuid
 import abc
+import uuid
 
 # Example of enitity
 

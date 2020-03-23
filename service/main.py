@@ -7,12 +7,9 @@ from sqlalchemy.orm import sessionmaker
 
 from model import Blog, Post, Tag
 from orm import metadata, start_mapper
-
 from repo import SqlRepository
-from unit_of_work import SqlAlchemyUnitOfWork
-
 from service import create_post  # type: ignore
-
+from unit_of_work import SqlAlchemyUnitOfWork
 
 # define engine
 engine = create_engine("sqlite:///service.db")

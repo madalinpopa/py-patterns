@@ -2,13 +2,12 @@
 
 # service/orm.py
 
-from sqlalchemy import MetaData, ForeignKey, Table, Column, Integer, String, Date
+import datetime
+
+from sqlalchemy import Column, Date, ForeignKey, Integer, MetaData, String, Table
 from sqlalchemy.orm import mapper, relationship
 
 from model import Blog, Post, Tag
-
-import datetime
-
 
 metadata = MetaData()
 
