@@ -5,10 +5,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from orm import metadata, start_mapper
-
 from model import register_user
-from unit_of_work import  SqlAlchemyUnitOfWork
+from orm import metadata, start_mapper
+from unit_of_work import SqlAlchemyUnitOfWork
 
 # define engine
 engine = create_engine("sqlite:///demo.db", echo=True)
