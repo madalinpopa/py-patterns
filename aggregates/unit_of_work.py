@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 
 from repo import AbstractRepository, SqlRepository
 
-DEFAULT_SESSION = sessionmaker(bind=create_engine("sqlite:///demo.db"))
+DEFAULT_SESSION = sessionmaker(bind=create_engine("sqlite:///demo.db"), expire_on_commit=False)
 
 
 class AbstractUnitOfWork(abc.ABC):

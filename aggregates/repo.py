@@ -30,3 +30,6 @@ class SqlRepository(AbstractRepository):
 
     def get_all(self) -> List[User]:
         return self._session.query(User).all()
+
+    def get_by_username(self, username: str):
+        return self._session.query(User).filter_by(username=username).first()
