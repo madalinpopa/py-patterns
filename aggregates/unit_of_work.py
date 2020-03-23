@@ -4,9 +4,12 @@
 
 import abc
 
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
 from repo import AbstractRepository, SqlRepository
 
-DEFAULT_SESSION = "sqlite:///aggregates.db"
+DEFAULT_SESSION = sessionmaker(bind=create_engine("sqlite:///demo.db"))
 
 
 class AbstractUnitOfWork(abc.ABC):

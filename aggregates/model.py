@@ -151,31 +151,15 @@ class Entity(abc.ABC):
     @abc.abstractmethod
     def __init__(self, reference_id: str):
         self._id = reference_id
-        self._discarded = False
         self._version: str
 
     @hybrid_property
-    def reference() -> str:
-        self._check_not_discarded()
+    def reference(self) -> str:
         return self._id
 
     @hybrid_property
     def version(self) -> int:
-        self._check_not_discarded
         return self._version
-
-    @property
-    def discarded(self) -> bool:
-        return self._discarded
-
-    @discarded.setter
-    def discarded(self, value):
-        if not isinstance(value, bool):
-            raise ValueError(f"{value} not of type {bool}")
-
-    def _check_not_discarded(self) -> None:
-        if self._discarded:
-            raise DiscardEntityError(f"Attempt to use {self.__class__.__name__}")
 
 
 class Profile(Entity):

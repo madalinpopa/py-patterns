@@ -9,6 +9,8 @@ import uuid
 
 from model import Email, Role, User, Profile, register_user, register_user_profile
 
+from unit_of_work import SqlAlchemyUnitOfWork
+
 # define engine
 engine = create_engine("sqlite:///demo.db", echo=True)
 
@@ -26,15 +28,16 @@ def main():
 
     user = register_user("madalin", "secret", "admin")
     profile = register_user_profile("Popa", "John", "test@gmail.com")
-    session.add_all([user, profile])
-    session.commit()
     user.profile = profile
 
-    user_db = session.query(User).filter_by(username="madalin").first()
-    profile_db = session.query(Profile).filter_by(firstname="Popa").first()
+    uow = SqlAlchemyUnitOfWork()
 
-    print("User: ", user_db)
-    print("Profile: ", profile_db)
+    # with uow:
+    #     uow.repo.add(user)
+
+    with uow:
+        user = uow.repo.get("e0fbd31932a54ed393c4fadef1a6e391")
+        print(user)
 
 
 if __name__ == "__main__":
