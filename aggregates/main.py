@@ -10,7 +10,7 @@ import uuid
 from model import Email, Role, User, Profile, register_user, register_user_profile
 
 # define engine
-engine = create_engine("sqlite:///aggregate.db", echo=True)
+engine = create_engine("sqlite:///demo.db", echo=True)
 
 # define session
 session = sessionmaker(bind=engine)()
