@@ -2,7 +2,7 @@
 
 # aggregates/service.py
 
-from model import register_user, register_user_profile, Profile
+from model import Profile, register_user, register_user_profile
 from unit_of_work import SqlAlchemyUnitOfWork
 
 

@@ -1,6 +1,7 @@
 # coding: utf-8
 
-# aggregates/uow.py
+# events/unit_of_work.py
+
 
 import abc
 
@@ -27,16 +28,16 @@ class AbstractUnitOfWork(abc.ABC):
         else:
             self.rollback()
 
-    @abc.abstractmethod
-    def commit():
+    @abc.abstractclassmethod
+    def commit(self):
         raise NotImplementedError
 
-    @abc.abstractmethod
-    def rollback():
+    @abc.abstractclassmethod
+    def rollback(self):
         raise NotImplementedError
 
 
-class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
+class SqlAlchemyUnitOfWork(AbstractRepository):
     def __init__(self, session_factory=DEFAULT_SESSION):
         self.session_factory = session_factory
 
