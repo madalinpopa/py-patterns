@@ -28,12 +28,12 @@ class AbstractUnitOfWork(abc.ABC):
         else:
             self.rollback()
 
-    @abc.abstractclassmethod
-    def commit(self):
+    @abc.abstractmethod
+    def commit():
         raise NotImplementedError
 
-    @abc.abstractclassmethod
-    def rollback(self):
+    @abc.abstractmethod
+    def rollback():
         raise NotImplementedError
 
 
