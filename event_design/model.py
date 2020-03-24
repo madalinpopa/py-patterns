@@ -8,9 +8,15 @@ import uuid
 
 from sqlalchemy.ext.hybrid import hybrid_property
 
+import event
+
 
 def register_user(username: str, password: str, role: str):
-    pass
+    role = Role(role)
+    user_reference = uuid.uuid4().hex
+    user = User(user_reference, username, password, role)
+    user.events.append(event.UseCreationEvent(user.username))
+    return user
 
 
 class Role:
@@ -66,6 +72,7 @@ class User(Entity):
         self._username = username
         self._password = password
         self._role = role
+        self.events = []
 
     def __str__(self):
         return f"{self._username}"
