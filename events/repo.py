@@ -29,7 +29,7 @@ class AbstractRepository(abc.ABC):
 
     @abc.abstractmethod
     def _get(self):
-        raise NotADirectoryError
+        raise NotImplementedError
 
 
 class SqlRepository(AbstractRepository):

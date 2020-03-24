@@ -46,7 +46,7 @@ def start_mapper():
         User,
         user,
         order_by=user.c.username,
-        version_id=user.c.version,
+        version_id_col=user.c.version,
         version_id_generator=lambda version: uuid.uuid4().hex,
         properties={
             "_reference": user.c.reference,
