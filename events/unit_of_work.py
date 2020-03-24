@@ -37,7 +37,7 @@ class AbstractUnitOfWork(abc.ABC):
         raise NotImplementedError
 
 
-class SqlAlchemyUnitOfWork(AbstractRepository):
+class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
     def __init__(self, session_factory=DEFAULT_SESSION):
         self.session_factory = session_factory
 
