@@ -8,10 +8,11 @@ import abc
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from messagebuss import handle
 from repo import AbstractRepository, SqlRepository
 
 DEFAULT_SESSION = sessionmaker(
-    bind=create_engine("sqlite:///demo.db"), expire_on_commit=False
+    bind=create_engine("sqlite:///demo.db"), expire_on_commit=False,
 )
 
 
@@ -28,13 +29,26 @@ class AbstractUnitOfWork(abc.ABC):
         else:
             self.rollback()
 
+    def commit(self):
+        self._commit()
+        self.publish_events()
+
     @abc.abstractmethod
-    def commit():
+    def _commit(self):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def rollback():
+    def rollback(self):
         raise NotImplementedError
+
+    def publish_events(self):
+        for user in self.repo.seen:
+            while self.repo.seen:
+                if len(user.events) != 0:
+                    event = user.events.pop(0)
+                    handle(event)
+                else:
+                    break
 
 
 class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
@@ -50,7 +64,7 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
         super().__exit__(*args)
         self.session.close()
 
-    def commit(self):
+    def _commit(self):
         self.session.commit()
 
     def rollback(self):
