@@ -5,9 +5,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from model import register_user
+import service
 from orm import metadata, start_mapper
-from unit_of_work import SqlAlchemyUnitOfWork
 
 # define engine
 engine = create_engine("sqlite:///demo.db", echo=True)
@@ -22,12 +21,7 @@ def main():
 
     metadata.create_all(bind=engine)
 
-    user = register_user("madalin", "password", "admin")
-
-    uow = SqlAlchemyUnitOfWork()
-
-    with uow:
-        uow.repo.add(user)
+    service.create_user("john", "secret", "admin")
 
 
 if __name__ == "__main__":
