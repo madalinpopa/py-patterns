@@ -7,13 +7,14 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 from typing import List
 import uuid
+import event
 
 def create_order(firstname: str, lastname: str, country: str, city: str, lines: List["Line"]) -> "Order":
     customer = Customer(firstname, lastname)
     addres = Address(country, city)
     reference = uuid.uuid4().hex
     order = Order(reference, customer, address, lines )
-    order.events.append("event")
+    order.events.append(event.NewOrderEvent(reference, customer.firstname))
     return order
 
 
