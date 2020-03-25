@@ -14,7 +14,8 @@ def create_order(firstname: str, lastname: str, country: str, city: str, lines: 
     addres = Address(country, city)
     reference = uuid.uuid4().hex
     order = Order(reference, customer, address, lines )
-    order.events.append(event.NewOrderEvent(reference, customer.firstname))
+    ev = event.NewOrderEvent(reference, firstname, lastname, country, city, lines)
+    order.events.append(ev)
     return order
 
 
