@@ -25,6 +25,7 @@ def main():
         evn = event.NewUserEvent("john", "secret", "admin")
         uow = unit_of_work.SqlAlchemyUnitOfWork()
         result = messagebuss.handle(evn, uow)
+        print(result)
     except ValueError:
         pass
 
