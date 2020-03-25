@@ -138,12 +138,17 @@ class Order(Entity):
         super().__init__(reference)
         self._customer = customer
         self._address = address
+        self._lines = []
 
     def __str__(self):
         return f"Order: {self._reference}"
 
     def __repr__(self):
         return f"Order(reference={self._reference}, customer={self._customer})"
+
+    @hybrid_property
+    def lines(self):
+        return self._lines
 
     @hybrid_property
     def customer(self):
@@ -165,4 +170,3 @@ class Order(Entity):
             raise ValueError(f"{value} is not instance of {Address}")
         self._address = value
 
-        
