@@ -15,6 +15,7 @@ engine = create_engine("sqlite:///demo.db")
 # default session
 DEFAULT_SESSION = sessionmaker(bind=engine, expire_on_commit=False)
 
+
 class AbstractUnitOfWork(abc.ABC):
 
     repo = AbstractRepository
@@ -35,7 +36,7 @@ class AbstractUnitOfWork(abc.ABC):
         for order in self.repo.seen:
             while self.repo.seen:
                 yield order.events.pop(0)
-    
+
     @abc.abstractmethod
     def _commit(self):
         raise NotImplementedError
@@ -46,7 +47,6 @@ class AbstractUnitOfWork(abc.ABC):
 
 
 class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
-
     def __init__(self, session_factory=DEFAULT_SESSION):
         self.session_factory = session_factory
 
@@ -55,13 +55,12 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
         self.repo = SqlRepository(self.session)
         return super().__enter__()
 
-    def __exit__(self):
+    def __exit__(self, *args):
         super().__exit__(*args)
         self.session.close()
 
     def _commit(self):
         self.session.commit()
-    
+
     def rollback(self):
         self.session.rollback()
-

@@ -6,6 +6,7 @@ import event
 import handlers
 import unit_of_work
 
+
 def handle(evn: event.Event, uow: unit_of_work.AbstractUnitOfWork):
     result = []
     queue = [evn]
@@ -17,6 +18,4 @@ def handle(evn: event.Event, uow: unit_of_work.AbstractUnitOfWork):
     return result
 
 
-HANDLERS = {
-    event.NewOrderEvent: [handlers.create_order]
-}
+HANDLERS = {event.NewOrderEvent: [handlers.create_order]}

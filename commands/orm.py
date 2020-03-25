@@ -4,7 +4,7 @@
 
 import uuid
 
-from sqlalchemy import MetaData, Table, Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, MetaData, String, Table
 from sqlalchemy.orm import mapper, relationship
 
 import model
@@ -18,7 +18,7 @@ line = Table(
     Column("sku", String(30), nullable=False),
     Column("qty", Integer, nullable=False),
     Column("price", Integer, nullable=False),
-    Column("order_id", Integer, ForeignKey("order.id")),
+    Column("line_order_id", Integer, ForeignKey("orders.id")),
 )
 
 customer = Table(
@@ -27,7 +27,7 @@ customer = Table(
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("firstname", String(50), nullable=False),
     Column("lastname", String(50), nullable=False),
-    Column("cust_order_id", Integer, ForeignKey("order.id")),
+    Column("cust_order_id", Integer, ForeignKey("orders.id")),
 )
 
 address = Table(
@@ -36,28 +36,29 @@ address = Table(
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("country", String(50), nullable=False),
     Column("city", String(50), nullable=False),
-    Column("addr_order_id", Integer, ForeignKey("order.id")),
+    Column("addr_order_id", Integer, ForeignKey("orders.id")),
 )
 
-order = Table(
-    "order",
-    metadata, 
+orders = Table(
+    "orders",
+    metadata,
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("reference", String(32), nullable=False),
     Column("version", String(32), nullable=False),
 )
 
+
 def start_mapper():
     """ Maper function """
     mapper(
-        model.Line, 
+        model.Line,
         line,
         properties={
             "_sku": line.c.sku,
             "_qty": line.c.qty,
             "_price": line.c.price,
-            "order_id": relationship(model.Order, back_populates="lines")
-        }
+            "_line_order_id": relationship(model.Order, back_populates="_lines"),
+        },
     )
     mapper(
         model.Customer,
@@ -65,8 +66,10 @@ def start_mapper():
         properties={
             "_firstname": customer.c.firstname,
             "_lastname": customer.c.lastname,
-            "cust_order_id": relationship(model.Order, uselist=False, back_populates="_customer")
-        }
+            "_cust_order_id": relationship(
+                model.Order, uselist=False, back_populates="_customer"
+            ),
+        },
     )
     mapper(
         model.Address,
@@ -74,19 +77,27 @@ def start_mapper():
         properties={
             "_country": address.c.country,
             "_city": address.c.city,
-            "addr_order_id": relationship(model.Order, uselist=False, back_populates="_address")
-        }
+            "_addr_order_id": relationship(
+                model.Order, uselist=False, back_populates="_address"
+            ),
+        },
     )
     mapper(
         model.Order,
-        order,
-        version_id_col=order.c.version,
+        orders,
+        version_id_col=orders.c.version,
         version_id_generator=lambda version: uuid.uuid4().hex,
         properties={
-            "_reference": order.c.reference,
-            "_version": order.c.version,
-            "_customer": relationship(model.Customer, uselist=False, back_populates="cust_order_id"),
-            "_address": relationship(model.Address, uselist=False, back_populates="addr_order_id"),
-            "_lines": relationship(model.Line, uselist=False, back_populates="order_id")
-        }
+            "_reference": orders.c.reference,
+            "_version": orders.c.version,
+            "_customer": relationship(
+                model.Customer, uselist=False, back_populates="_cust_order_id"
+            ),
+            "_address": relationship(
+                model.Address, uselist=False, back_populates="_addr_order_id"
+            ),
+            "_lines": relationship(
+                model.Line, uselist=False, back_populates="_line_order_id"
+            ),
+        },
     )

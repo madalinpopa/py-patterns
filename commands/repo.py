@@ -8,7 +8,6 @@ import model
 
 
 class AbstractRepository(abc.ABC):
-
     def __init__(self):
         self.seen = set()
 
@@ -29,9 +28,10 @@ class AbstractRepository(abc.ABC):
     def _get(self):
         raise NotImplementedError
 
-class SqlRepository(AbstractRepository):
 
+class SqlRepository(AbstractRepository):
     def __init__(self, session):
+        super().__init__()
         self.session = session
 
     def _add(self, order: model.Order):

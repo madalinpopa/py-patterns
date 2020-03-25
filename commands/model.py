@@ -3,18 +3,20 @@
 # commands/model.py
 
 import abc
+import uuid
+from typing import List
+
 from sqlalchemy.ext.hybrid import hybrid_property
 
-from typing import List
-import uuid
 import event
 
-def create_order(firstname: str, lastname: str, country: str, city: str, lines: List["Line"]) -> "Order":
+
+def create_order(firstname: str, lastname: str, country: str, city: str) -> "Order":
     customer = Customer(firstname, lastname)
-    addres = Address(country, city)
+    address = Address(country, city)
     reference = uuid.uuid4().hex
-    order = Order(reference, customer, address, lines )
-    ev = event.NewOrderEvent(reference, firstname, lastname, country, city, lines)
+    order = Order(reference, customer, address)
+    ev = event.NewOrderEvent(firstname, lastname, country, city)
     order.events.append(ev)
     return order
 
@@ -24,6 +26,7 @@ class Line:
         self._sku = sku
         self._qty = qty
         self._price = price
+        self._line_order_id: "Order"
 
     def __str__(self):
         return f"{self._sku}, {self._qty}"
@@ -65,6 +68,7 @@ class Customer:
     def __init__(self, firstname: str, lastname: str):
         self._firstname = firstname
         self._lastname = lastname
+        self._cust_order_id: "Order"
 
     def __str__(self):
         return f"{self._firstname} {self._lastname}"
@@ -96,6 +100,7 @@ class Address:
     def __init__(self, country: str, city: str):
         self._country = country
         self._city = city
+        self._addr_order_id: "Order"
 
     def __str__(self):
         return f"{self._country}, {self._city}"
@@ -144,11 +149,11 @@ class Entity(abc.ABC):
 
 
 class Order(Entity):
-    def __init__(self, reference: str, customer: Customer, address: Address, lines: List[Line]):
+    def __init__(self, reference: str, customer: Customer, address: Address):
         super().__init__(reference)
         self._customer = customer
         self._address = address
-        self._lines = lines
+        self._lines: List[Line]
 
     def __str__(self):
         return f"Order: {self._reference}"
@@ -164,7 +169,7 @@ class Order(Entity):
     def lines(self, values: List[Line]):
         if len(values) < 1:
             raise ValueError("list of lines cannot be empty.")
-        self._lines = value
+        self._lines.extend(values)
 
     @hybrid_property
     def customer(self):
@@ -175,14 +180,13 @@ class Order(Entity):
         if not isinstance(value, Customer):
             raise ValueError(f"{value} is not instance of {Customer}")
         self._customer = value
-    
+
     @hybrid_property
     def address(self):
         return self._address
-    
+
     @address.setter
     def address(self, value):
         if not isinstance(value, Address):
             raise ValueError(f"{value} is not instance of {Address}")
         self._address = value
-
