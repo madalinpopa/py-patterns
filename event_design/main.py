@@ -18,9 +18,7 @@ session = sessionmaker(bind=engine)()
 def main():
 
     start_mapper()
-
     metadata.create_all(bind=engine)
-
     service.create_user("john", "secret", "admin")
 
 
