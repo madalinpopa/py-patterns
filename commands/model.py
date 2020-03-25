@@ -5,9 +5,16 @@
 import abc
 from sqlalchemy.ext.hybrid import hybrid_property
 
+from typing import List
+import uuid
 
-def create_order():
-    pass
+def create_order(firstname: str, lastname: str, country: str, city: str, lines: List["Line"]) -> "Order":
+    customer = Customer(firstname, lastname)
+    addres = Address(country, city)
+    reference = uuid.uuid4().hex
+    order = Order(reference, customer, address, lines )
+    order.events.append("event")
+    return order
 
 
 class Line:
@@ -123,6 +130,7 @@ class Entity(abc.ABC):
     def __init__(self, reference: str):
         self._reference = reference
         self._version: str
+        self.events = []
 
     @hybrid_property
     def reference(self):
@@ -134,11 +142,11 @@ class Entity(abc.ABC):
 
 
 class Order(Entity):
-    def __init__(self, reference: str, customer: Customer, address: Address):
+    def __init__(self, reference: str, customer: Customer, address: Address, lines: List[Line]):
         super().__init__(reference)
         self._customer = customer
         self._address = address
-        self._lines = []
+        self._lines = lines
 
     def __str__(self):
         return f"Order: {self._reference}"
@@ -149,6 +157,12 @@ class Order(Entity):
     @hybrid_property
     def lines(self):
         return self._lines
+
+    @lines.setter
+    def lines(self, values: List[Line]):
+        if len(values) < 1:
+            raise ValueError("list of lines cannot be empty.")
+        self._lines = value
 
     @hybrid_property
     def customer(self):
