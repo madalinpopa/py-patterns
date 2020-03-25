@@ -5,7 +5,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-import service
+import event
+import messagebuss
+import unit_of_work
 from orm import metadata, start_mapper
 
 # define engine
@@ -19,7 +21,12 @@ def main():
 
     start_mapper()
     metadata.create_all(bind=engine)
-    service.create_user("john", "secret", "admin")
+    try:
+        evn = event.NewUserEvent("john", "secret", "admin")
+        uow = unit_of_work.SqlAlchemyUnitOfWork()
+        result = messagebuss.handle(evn, uow)
+    except ValueError:
+        pass
 
 
 if __name__ == "__main__":

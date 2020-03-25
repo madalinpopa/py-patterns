@@ -31,7 +31,6 @@ class AbstractUnitOfWork(abc.ABC):
 
     def commit(self):
         self._commit()
-        self.publish_events()
 
     @abc.abstractmethod
     def _commit(self):
@@ -41,14 +40,10 @@ class AbstractUnitOfWork(abc.ABC):
     def rollback(self):
         raise NotImplementedError
 
-    def publish_events(self):
+    def collect_new_events(self):
         for user in self.repo.seen:
             while self.repo.seen:
-                if len(user.events) != 0:
-                    event = user.events.pop(0)
-                    handle(event)
-                else:
-                    break
+                yield user.events.pop(0)
 
 
 class SqlAlchemyUnitOfWork(AbstractUnitOfWork):

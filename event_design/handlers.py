@@ -4,14 +4,14 @@
 # events_design/service
 
 
+import event
 from model import User, register_user
-from unit_of_work import SqlAlchemyUnitOfWork
+from unit_of_work import AbstractRepository
 
 
-def create_user(username: str, password: str, role: str):
+def create_user(evn: event.NewUserEvent, uow: AbstractRepository):
     try:
-        user = register_user(username, password, role)
-        uow = SqlAlchemyUnitOfWork()
+        user = register_user(evn.username, evn.password, evn.role)
         with uow:
             uow.repo.add(user)
         return True

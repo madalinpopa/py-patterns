@@ -12,3 +12,10 @@ class Event:
 @dataclass
 class UseCreationEvent(Event):
     username: str
+
+
+@dataclass
+class NewUserEvent(Event):
+    username: str
+    password: str
+    role: str
