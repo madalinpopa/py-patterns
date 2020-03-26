@@ -13,6 +13,7 @@ class AbstractRepository(abc.ABC):
 
     def add(self, order: model.Order):
         self._add(order)
+        self.seen.add(order)
 
     def get(self, reference: str):
         order = self._get(reference)

@@ -4,7 +4,7 @@
 
 from sqlalchemy import create_engine
 
-import event
+import command
 import messagebus
 import model
 import unit_of_work
@@ -24,12 +24,12 @@ def main():
             model.Line("Product 2", 23, 350),
             model.Line("Product 3", 14, 150),
         ]
-        evn = event.NewOrderEvent(
+        cmd = command.CreateNewOrder(
             firstname="John", lastname="Doe", country="Romania", city="Bucharest",
         )
 
         uow = unit_of_work.SqlAlchemyUnitOfWork()
-        result = messagebus.handle(evn, uow)
+        result = messagebus.handle(cmd, uow)
         print(result)
     except ValueError as err:
         print(ValueError)

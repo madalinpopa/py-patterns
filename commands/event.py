@@ -18,3 +18,8 @@ class NewOrderEvent(Event):
     lastname: str
     country: str
     city: str
+
+
+@dataclass
+class NotificationEvent(Event):
+    message: str

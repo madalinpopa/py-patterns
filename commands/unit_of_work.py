@@ -35,7 +35,10 @@ class AbstractUnitOfWork(abc.ABC):
     def collect_new_events(self):
         for order in self.repo.seen:
             while self.repo.seen:
-                yield order.events.pop(0)
+                if order.events:
+                    yield order.events.pop(0)
+                else:
+                    break
 
     @abc.abstractmethod
     def _commit(self):
