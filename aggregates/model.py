@@ -8,9 +8,8 @@ from typing import Any, List, NewType
 
 from sqlalchemy.ext.hybrid import hybrid_property
 
-# Factory Functions
 
-
+# Factory function
 def register_user(username: str, password: str, role: str):
     user_role = Role(role)
     user_id = uuid.uuid4().hex
