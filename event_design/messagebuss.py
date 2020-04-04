@@ -18,7 +18,7 @@ def handle(evn: event.Event, uow: unit_of_work.AbstractUnitOfWork):
     return result
 
 
-def send_mail_notification_event(username: str):
+def send_mail_notification_event(username: str, uow=None):
     print(f"Mail notification sent for {username} creation!")
 
 

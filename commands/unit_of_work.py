@@ -32,14 +32,6 @@ class AbstractUnitOfWork(abc.ABC):
     def commit(self):
         self._commit()
 
-    def collect_new_events(self):
-        for order in self.repo.seen:
-            while self.repo.seen:
-                if order.events:
-                    yield order.events.pop(0)
-                else:
-                    break
-
     @abc.abstractmethod
     def _commit(self):
         raise NotImplementedError
@@ -47,6 +39,11 @@ class AbstractUnitOfWork(abc.ABC):
     @abc.abstractmethod
     def rollback(self):
         raise NotImplementedError
+
+    def collect_new_events(self):
+        for order in self.repo.seen:
+            while order.events:
+                yield order.events.pop(0)
 
 
 class SqlAlchemyUnitOfWork(AbstractUnitOfWork):

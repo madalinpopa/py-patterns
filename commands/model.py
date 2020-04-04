@@ -137,7 +137,6 @@ class Entity(abc.ABC):
     def __init__(self, reference: str):
         self._reference = reference
         self._version: str
-        self.events = []
 
     @hybrid_property
     def reference(self):
@@ -154,6 +153,7 @@ class Order(Entity):
         self._customer = customer
         self._address = address
         self._lines: List[Line]
+        self.events = []
 
     def __str__(self):
         return f"Order: {self._reference}"

@@ -42,7 +42,7 @@ class AbstractUnitOfWork(abc.ABC):
 
     def collect_new_events(self):
         for user in self.repo.seen:
-            while self.repo.seen:
+            while user.events:
                 yield user.events.pop(0)
 
 

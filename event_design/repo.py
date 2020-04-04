@@ -1,6 +1,5 @@
 # coding: utf-8
 
-
 # event_design/repo.py
 
 import abc
@@ -14,6 +13,7 @@ class AbstractRepository(abc.ABC):
 
     def add(self, user: User):
         self._add(user)
+        self.seen.add(user)
 
     def get(self, reference: str):
         user = self._get(reference)
